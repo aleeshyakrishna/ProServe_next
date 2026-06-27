@@ -62,7 +62,7 @@ export function LoginForm() {
               Password
             </label>
             <Link
-              href="/auth/forgot-password"
+              href="/forgot-password"
               className={cn(
                 "text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:text-emerald-500",
                 "focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-emerald-500 rounded px-1"
