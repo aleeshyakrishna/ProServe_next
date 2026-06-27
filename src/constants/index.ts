@@ -1,0 +1,361 @@
+import type { Category, Provider, Service, Review } from "@/types";
+
+// ------ App Config -----------------------------------------
+
+export const APP_NAME = "ProServe" as const;
+export const APP_TAGLINE = "Find Verified Professionals in the UAE" as const;
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://proserve.ae";
+
+// ------ Navigation Links -----------------------------------
+
+export const NAV_LINKS = [
+  { label: "Services", href: "/services" },
+  { label: "Providers", href: "/providers" },
+  { label: "How It Works", href: "/#how-it-works" },
+  { label: "Pricing", href: "/pricing" },
+] as const;
+
+// ------ Service Categories (static seed) -------------------
+
+export const CATEGORIES: Category[] = [
+  {
+    id: "cat-1",
+    name: "Home Cleaning",
+    slug: "home-cleaning",
+    description: "Professional cleaning services for homes and apartments",
+    iconName: "sparkles",
+    serviceCount: 248,
+    imageUrl: null,
+  },
+  {
+    id: "cat-2",
+    name: "Plumbing",
+    slug: "plumbing",
+    description: "Licensed plumbers for all repair and installation needs",
+    iconName: "wrench",
+    serviceCount: 134,
+    imageUrl: null,
+  },
+  {
+    id: "cat-3",
+    name: "Electrical",
+    slug: "electrical",
+    description: "Certified electricians for safe, reliable electrical work",
+    iconName: "zap",
+    serviceCount: 96,
+    imageUrl: null,
+  },
+  {
+    id: "cat-4",
+    name: "AC & HVAC",
+    slug: "ac-hvac",
+    description: "AC installation, repair, and maintenance specialists",
+    iconName: "wind",
+    serviceCount: 187,
+    imageUrl: null,
+  },
+  {
+    id: "cat-5",
+    name: "Painting",
+    slug: "painting",
+    description: "Interior and exterior painting by skilled professionals",
+    iconName: "paintbrush",
+    serviceCount: 112,
+    imageUrl: null,
+  },
+  {
+    id: "cat-6",
+    name: "Carpentry",
+    slug: "carpentry",
+    description: "Custom furniture, installations, and woodwork",
+    iconName: "hammer",
+    serviceCount: 89,
+    imageUrl: null,
+  },
+  {
+    id: "cat-7",
+    name: "Beauty & Wellness",
+    slug: "beauty-wellness",
+    description: "In-home beauty treatments and wellness services",
+    iconName: "heart",
+    serviceCount: 203,
+    imageUrl: null,
+  },
+  {
+    id: "cat-8",
+    name: "Gardening",
+    slug: "gardening",
+    description: "Garden design, maintenance, and landscaping",
+    iconName: "leaf",
+    serviceCount: 71,
+    imageUrl: null,
+  },
+];
+
+// ------ Featured Providers (static seed) -------------------
+
+export const FEATURED_PROVIDERS: Provider[] = [
+  {
+    id: "prov-1",
+    userId: "user-1",
+    businessName: "AlSaif Premium Cleaning",
+    tagline: "Dubai's Most Trusted Cleaning Service",
+    bio: "With over 12 years of experience, we deliver 5-star cleaning across Dubai and Abu Dhabi.",
+    avatarUrl: null,
+    rating: 4.9,
+    reviewCount: 847,
+    completedJobs: 3241,
+    responseTime: "< 30 mins",
+    isVerified: true,
+    isFeatured: true,
+    categories: [CATEGORIES[0]],
+    location: "Dubai Marina, Dubai",
+    joinedAt: "2019-03-15T00:00:00Z",
+  },
+  {
+    id: "prov-2",
+    userId: "user-2",
+    businessName: "ProTech Electrical Solutions",
+    tagline: "Certified & Insured Electrical Experts",
+    bio: "DEWA-approved contractors delivering safe electrical solutions for residential and commercial projects.",
+    avatarUrl: null,
+    rating: 4.8,
+    reviewCount: 563,
+    completedJobs: 2108,
+    responseTime: "< 1 hour",
+    isVerified: true,
+    isFeatured: true,
+    categories: [CATEGORIES[2]],
+    location: "Business Bay, Dubai",
+    joinedAt: "2020-01-10T00:00:00Z",
+  },
+  {
+    id: "prov-3",
+    userId: "user-3",
+    businessName: "CoolBreeze HVAC",
+    tagline: "AC Experts Trusted by 5,000+ Clients",
+    bio: "Specialized in all major AC brands. Fast response, guaranteed workmanship, competitive rates.",
+    avatarUrl: null,
+    rating: 4.9,
+    reviewCount: 1204,
+    completedJobs: 5670,
+    responseTime: "< 2 hours",
+    isVerified: true,
+    isFeatured: true,
+    categories: [CATEGORIES[3]],
+    location: "Jumeirah, Dubai",
+    joinedAt: "2018-06-22T00:00:00Z",
+  },
+  {
+    id: "prov-4",
+    userId: "user-4",
+    businessName: "Harmony Beauty Studio",
+    tagline: "Luxury Beauty at Your Doorstep",
+    bio: "Premium beauty and wellness services delivered by certified therapists across the UAE.",
+    avatarUrl: null,
+    rating: 4.7,
+    reviewCount: 392,
+    completedJobs: 1876,
+    responseTime: "< 45 mins",
+    isVerified: true,
+    isFeatured: true,
+    categories: [CATEGORIES[6]],
+    location: "Downtown Dubai, Dubai",
+    joinedAt: "2021-02-14T00:00:00Z",
+  },
+];
+
+// ------ Popular Services (static seed) ---------------------
+
+export const POPULAR_SERVICES: Service[] = [
+  {
+    id: "svc-1",
+    providerId: "prov-1",
+    provider: {
+      id: "prov-1",
+      businessName: "AlSaif Premium Cleaning",
+      avatarUrl: null,
+      rating: 4.9,
+      reviewCount: 847,
+      isVerified: true,
+    },
+    categoryId: "cat-1",
+    category: { id: "cat-1", name: "Home Cleaning", slug: "home-cleaning" },
+    title: "Deep Home Cleaning",
+    description: "Thorough deep cleaning of your entire home using eco-friendly products and professional equipment.",
+    imageUrl: null,
+    priceFrom: 150,
+    priceTo: 500,
+    pricingType: "fixed",
+    currency: "AED",
+    duration: "3–6 hours",
+    isActive: true,
+    isFeatured: true,
+    rating: 4.9,
+    reviewCount: 412,
+    createdAt: "2023-01-10T00:00:00Z",
+  },
+  {
+    id: "svc-2",
+    providerId: "prov-2",
+    provider: {
+      id: "prov-2",
+      businessName: "ProTech Electrical Solutions",
+      avatarUrl: null,
+      rating: 4.8,
+      reviewCount: 563,
+      isVerified: true,
+    },
+    categoryId: "cat-3",
+    category: { id: "cat-3", name: "Electrical", slug: "electrical" },
+    title: "Electrical Panel Inspection",
+    description: "Complete safety inspection of your home's electrical panel and wiring by DEWA-certified engineers.",
+    imageUrl: null,
+    priceFrom: 200,
+    priceTo: null,
+    pricingType: "fixed",
+    currency: "AED",
+    duration: "2–3 hours",
+    isActive: true,
+    isFeatured: true,
+    rating: 4.8,
+    reviewCount: 231,
+    createdAt: "2023-02-15T00:00:00Z",
+  },
+  {
+    id: "svc-3",
+    providerId: "prov-3",
+    provider: {
+      id: "prov-3",
+      businessName: "CoolBreeze HVAC",
+      avatarUrl: null,
+      rating: 4.9,
+      reviewCount: 1204,
+      isVerified: true,
+    },
+    categoryId: "cat-4",
+    category: { id: "cat-4", name: "AC & HVAC", slug: "ac-hvac" },
+    title: "AC Service & Deep Clean",
+    description: "Full AC servicing including coil cleaning, gas check, and filter replacement for optimal performance.",
+    imageUrl: null,
+    priceFrom: 120,
+    priceTo: 250,
+    pricingType: "fixed",
+    currency: "AED",
+    duration: "1–2 hours",
+    isActive: true,
+    isFeatured: true,
+    rating: 4.9,
+    reviewCount: 687,
+    createdAt: "2023-03-20T00:00:00Z",
+  },
+  {
+    id: "svc-4",
+    providerId: "prov-4",
+    provider: {
+      id: "prov-4",
+      businessName: "Harmony Beauty Studio",
+      avatarUrl: null,
+      rating: 4.7,
+      reviewCount: 392,
+      isVerified: true,
+    },
+    categoryId: "cat-7",
+    category: { id: "cat-7", name: "Beauty & Wellness", slug: "beauty-wellness" },
+    title: "At-Home Spa Package",
+    description: "Relaxing full-body massage, facial, and manicure delivered by certified therapists to your door.",
+    imageUrl: null,
+    priceFrom: 350,
+    priceTo: 800,
+    pricingType: "fixed",
+    currency: "AED",
+    duration: "3 hours",
+    isActive: true,
+    isFeatured: true,
+    rating: 4.7,
+    reviewCount: 198,
+    createdAt: "2023-04-05T00:00:00Z",
+  },
+];
+
+// ------ Testimonials (static seed) -------------------------
+
+export const TESTIMONIALS: Review[] = [
+  {
+    id: "rev-1",
+    bookingId: "book-1",
+    customerId: "cust-1",
+    customer: {
+      id: "cust-1",
+      fullName: "Fatima Al Mansoori",
+      avatarUrl: null,
+    },
+    providerId: "prov-1",
+    serviceId: "svc-1",
+    rating: 5,
+    title: "Absolutely exceptional service",
+    body: "The team was punctual, professional, and the result was stunning. My villa has never looked this clean. Booked again immediately.",
+    createdAt: "2024-11-15T00:00:00Z",
+  },
+  {
+    id: "rev-2",
+    bookingId: "book-2",
+    customerId: "cust-2",
+    customer: {
+      id: "cust-2",
+      fullName: "Ahmed Khalil",
+      avatarUrl: null,
+    },
+    providerId: "prov-3",
+    serviceId: "svc-3",
+    rating: 5,
+    title: "Fixed in under an hour — impressed",
+    body: "CoolBreeze responded within 20 minutes on a Friday. The technician was knowledgeable and transparent about pricing. Highly recommend.",
+    createdAt: "2024-11-22T00:00:00Z",
+  },
+  {
+    id: "rev-3",
+    bookingId: "book-3",
+    customerId: "cust-3",
+    customer: {
+      id: "cust-3",
+      fullName: "Sarah Thompson",
+      avatarUrl: null,
+    },
+    providerId: "prov-4",
+    serviceId: "svc-4",
+    rating: 5,
+    title: "The best decision I made this month",
+    body: "I was skeptical at first, but the experience was incredible. Professional, hygienic, and genuinely relaxing. Worth every dirham.",
+    createdAt: "2024-12-01T00:00:00Z",
+  },
+];
+
+// ------ Statistics -----------------------------------------
+
+export const PLATFORM_STATS = [
+  { value: "50,000+", label: "Happy Customers", description: "Across UAE" },
+  { value: "3,200+", label: "Verified Providers", description: "Background checked" },
+  { value: "120,000+", label: "Jobs Completed", description: "And counting" },
+  { value: "4.9/5", label: "Average Rating", description: "From real reviews" },
+] as const;
+
+// ------ Booking Status Labels ------------------------------
+
+export const BOOKING_STATUS_LABELS = {
+  pending: "Pending",
+  confirmed: "Confirmed",
+  in_progress: "In Progress",
+  completed: "Completed",
+  cancelled: "Cancelled",
+  disputed: "Disputed",
+} as const;
+
+export const BOOKING_STATUS_COLORS = {
+  pending: "warning",
+  confirmed: "info",
+  in_progress: "info",
+  completed: "success",
+  cancelled: "error",
+  disputed: "error",
+} as const;
