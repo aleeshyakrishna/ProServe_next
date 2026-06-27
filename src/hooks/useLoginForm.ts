@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/validations/auth.schema";
+import { AuthService } from "@/services/auth.service";
 import type { LoginFormData, AuthState } from "@/types/auth";
 
 export function useLoginForm() {
@@ -28,23 +29,27 @@ export function useLoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setAuthState({ isLoading: true, isSuccess: false, error: null });
 
-    // Simulate database network latency (1.5 seconds)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const result = await AuthService.login(data);
 
-    // Mock validation criteria for demonstration
-    if (data.email === "error@proserve.ae") {
+      setAuthState({ isLoading: false, isSuccess: true, error: null });
+
+      // Redirect based on role returned by the backend
+      const primaryRole = result.roles[0]?.toUpperCase();
+      if (primaryRole === "SERVICE_PROVIDER") {
+        router.push("/provider/dashboard");
+      } else {
+        router.push("/customer/dashboard");
+      }
+    } catch (error) {
       setAuthState({
         isLoading: false,
         isSuccess: false,
-        error: "Invalid email credentials. Please check your entries and try again.",
+        error: error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.",
       });
-      return;
     }
-
-    setAuthState({ isLoading: false, isSuccess: true, error: null });
-    
-    // Redirect to default customer dashboard page
-    router.push("/customer/dashboard");
   };
 
   return {

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterSchema } from "@/validations/auth.schema";
+import { AuthService } from "@/services/auth.service";
 import type { RegisterFormData, AuthState } from "@/types/auth";
 
 export function useRegisterForm() {
@@ -32,26 +33,30 @@ export function useRegisterForm() {
   const onSubmit = async (data: RegisterFormData) => {
     setAuthState({ isLoading: true, isSuccess: false, error: null });
 
-    // Simulate database network latency (1.5 seconds)
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      const result = await AuthService.register(data);
 
-    // Mock validation criteria for email duplicates
-    if (data.email === "duplicate@proserve.ae") {
+      setAuthState({ isLoading: false, isSuccess: true, error: null });
+
+      if (result.emailConfirmationSent) {
+        // Email verification required before login is possible
+        router.push("/verify-email");
+      } else {
+        // Auto-confirmed (e.g. Supabase email confirmation disabled in dev)
+        if (data.role === "provider") {
+          router.push("/provider/dashboard");
+        } else {
+          router.push("/customer/dashboard");
+        }
+      }
+    } catch (error) {
       setAuthState({
         isLoading: false,
         isSuccess: false,
-        error: "This email address is already registered. Please sign in instead.",
+        error: error instanceof Error
+          ? error.message
+          : "Registration failed. Please try again.",
       });
-      return;
-    }
-
-    setAuthState({ isLoading: false, isSuccess: true, error: null });
-
-    // Redirect based on selected user role
-    if (data.role === "provider") {
-      router.push("/provider/dashboard");
-    } else {
-      router.push("/customer/dashboard");
     }
   };
 
