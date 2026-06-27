@@ -18,6 +18,8 @@ import { Avatar } from "@/components/ui/avatar";
 
 // ------ TopBar Component ---------------------------------------------------
 
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+
 export function TopBar() {
   const {
     toggleMobileSidebar,
@@ -26,11 +28,21 @@ export function TopBar() {
     setActiveTab,
   } = useDashboardStore();
 
-  const [activeWorkspace, setActiveWorkspace] = React.useState("AlSaif Premium Cleaning");
+  const { user, profile } = useAuthStore();
+  const userName = user?.name || "Provider Admin";
+  const workspaceName = profile?.fullName || user?.name || "Provider Workspace";
+
+  const [activeWorkspace, setActiveWorkspace] = React.useState(workspaceName);
   const [isWorkspaceMenuOpen, setIsWorkspaceMenuOpen] = React.useState(false);
 
+  React.useEffect(() => {
+    if (workspaceName) {
+      setActiveWorkspace(workspaceName);
+    }
+  }, [workspaceName]);
+
   const workspaces = [
-    "AlSaif Premium Cleaning",
+    workspaceName,
     "AlSaif AC Maintenance",
     "AlSaif Handyman Dubai",
   ];
@@ -158,10 +170,10 @@ export function TopBar() {
 
         {/* User profile dropdown info */}
         <div className="flex items-center gap-2 border-l border-[var(--border-subtle)] pl-4">
-          <Avatar alt="AlSaif Premium" name="AlSaif Admin" size="sm" />
+          <Avatar alt={userName} name={userName} size="sm" />
           <div className="hidden xl:flex flex-col text-left">
-            <span className="text-xs font-bold text-[var(--text-primary)] leading-tight">AlSaif Admin</span>
-            <span className="text-[10px] text-[var(--text-tertiary)] leading-none mt-0.5">Owner</span>
+            <span className="text-xs font-bold text-[var(--text-primary)] leading-tight">{userName}</span>
+            <span className="text-[10px] text-[var(--text-tertiary)] leading-none mt-0.5">Partner</span>
           </div>
         </div>
       </div>

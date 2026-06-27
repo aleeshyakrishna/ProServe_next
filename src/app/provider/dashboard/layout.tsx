@@ -4,7 +4,9 @@ import * as React from "react";
 import { Sidebar } from "@/features/provider-dashboard/components/Sidebar";
 import { TopBar } from "@/features/provider-dashboard/components/TopBar";
 import { useDashboardStore } from "@/features/provider-dashboard/store/useDashboardStore";
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 // ------ Layout Wrapper Component -------------------------------------------
 
@@ -13,7 +15,34 @@ export default function ProviderDashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const router = useRouter();
   const { isSidebarCollapsed } = useDashboardStore();
+  const { user, fetchCurrentUser, isLoading, error } = useAuthStore();
+
+  React.useEffect(() => {
+    fetchCurrentUser();
+  }, [fetchCurrentUser]);
+
+  // Handle unauthenticated state or fetch failures
+  React.useEffect(() => {
+    if (!isLoading && (error || (!user && !isLoading))) {
+      router.push("/login");
+    }
+  }, [user, isLoading, error, router]);
+
+  if (isLoading || !user) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-neutral-950">
+        <div className="flex flex-col items-center gap-4">
+          {/* Animated custom ring loading */}
+          <div className="h-10 w-10 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin" />
+          <span className="text-xs text-[var(--text-tertiary)] font-medium animate-pulse">
+            Loading secure session...
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-neutral-950 text-[var(--text-primary)]">

@@ -102,8 +102,13 @@ import { cn } from "@/lib/utils";
 
 // ------ Overview Tab Component ----------------------------------------------
 
+import { useAuthStore } from "@/features/auth/store/useAuthStore";
+
 export function OverviewTab() {
   const { setActiveTab } = useDashboardStore();
+  const { user, profile } = useAuthStore();
+
+  const providerName = profile?.fullName || user?.name || "Provider Partner";
 
   const mockStats: StatCardProps[] = [
     {
@@ -216,7 +221,7 @@ export function OverviewTab() {
               Welcome Back
             </span>
             <h2 className="text-display text-3xl font-bold tracking-tight text-white leading-tight">
-              AlSaif Premium Cleaning Services
+              {providerName}
             </h2>
             <p className="text-xs lg:text-sm text-navy-300 leading-relaxed text-balance">
               Your business is performing outstandingly in the Dubai Marina and Jumeirah sectors today. You have **5 upcoming jobs** needing team assignments and **1 pending payout** processing.
