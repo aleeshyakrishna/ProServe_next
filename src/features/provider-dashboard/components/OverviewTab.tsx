@@ -17,6 +17,8 @@ import {
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useDashboardStore } from "../store/useDashboardStore";
+import { RevenueChart } from "./RevenueChart";
+import { BookingsChart } from "./BookingsChart";
 
 // ------ Types & Interfaces -------------------------------------------------
 
@@ -103,17 +105,27 @@ import { cn } from "@/lib/utils";
 // ------ Overview Tab Component ----------------------------------------------
 
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useProviderDataStore } from "../store/useProviderDataStore";
 
 export function OverviewTab() {
   const { setActiveTab } = useDashboardStore();
   const { user, profile } = useAuthStore();
+  
+  const {
+    monthlyRevenue,
+    todaysBookingsCount,
+    completedJobsCount,
+    pendingJobsCount,
+    upcomingJobs: dbUpcomingJobs,
+    isLoading
+  } = useProviderDataStore();
 
   const providerName = profile?.fullName || user?.name || "Provider Partner";
 
   const mockStats: StatCardProps[] = [
     {
       title: "Monthly Revenue",
-      value: "AED 34,250",
+      value: `AED ${monthlyRevenue.toLocaleString()}`,
       description: "vs last month",
       change: "+12.4%",
       changeType: "positive",
@@ -122,8 +134,8 @@ export function OverviewTab() {
     },
     {
       title: "Today's Bookings",
-      value: "8 Jobs",
-      description: "3 completed, 5 pending",
+      value: `${todaysBookingsCount} Jobs`,
+      description: `${completedJobsCount} completed, ${pendingJobsCount} pending`,
       change: "On Track",
       changeType: "neutral",
       icon: Briefcase,
@@ -149,36 +161,16 @@ export function OverviewTab() {
     },
   ];
 
-  const upcomingJobs = [
-    {
-      id: "job-1",
-      customer: "Fatima Al Mansoori",
-      service: "Deep Home Cleaning (3 BR Villa)",
-      location: "Jumeirah Golf Estates, Dubai",
-      time: "09:00 AM - 12:00 PM",
-      status: "CONFIRMED",
-      amount: "AED 450",
-    },
-    {
-      id: "job-2",
-      customer: "John Davis",
-      service: "AC Service & Deep Clean (2 Units)",
-      location: "Marina Heights, Dubai Marina",
-      time: "01:30 PM - 03:00 PM",
-      status: "IN_PROGRESS",
-      amount: "AED 280",
-    },
-    {
-      id: "job-3",
-      customer: "Ahmed Al Maktoum",
-      service: "Emergency Plumbing (Pipe Leak)",
-      location: "Al Barsha 2, Dubai",
-      time: "04:30 PM - 05:30 PM",
-      status: "PENDING",
-      amount: "AED 350",
-      priority: "EMERGENCY",
-    },
-  ];
+  const upcomingJobs = dbUpcomingJobs.map((b) => ({
+    id: b.id,
+    customer: b.customerName || "Fatima Al Mansoori",
+    service: b.serviceName || "Home Service Appointment",
+    location: "Dubai Marina, Dubai, UAE",
+    time: new Date(b.scheduledAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    status: b.status,
+    amount: `AED ${b.price || 150}`,
+    priority: b.status === "PENDING" ? "EMERGENCY" : "NORMAL",
+  }));
 
   const recentActivity = [
     {
@@ -299,6 +291,12 @@ export function OverviewTab() {
         ))}
       </div>
 
+      {/* 2.5 Analytics Charts Grid (Phase 6 Charts) */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <RevenueChart />
+        <BookingsChart />
+      </div>
+
       {/* 3. Upcoming Schedule & Activity Split Grid */}
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Today's upcoming jobs list */}
@@ -347,7 +345,7 @@ export function OverviewTab() {
                       className={cn(
                         "text-[10px] font-bold px-2.5 py-1 rounded-xl border tracking-wide",
                         job.status === "CONFIRMED" && "bg-emerald-50 border-emerald-100 text-emerald-500 dark:bg-emerald-950/20 dark:border-emerald-900/30",
-                        job.status === "IN_PROGRESS" && "bg-info-50 border-info-100 text-info-500 dark:bg-info-950/20 dark:border-info-900/30",
+                        job.status === "COMPLETED" && "bg-info-50 border-info-100 text-info-500 dark:bg-info-950/20 dark:border-info-900/30",
                         job.status === "PENDING" && "bg-warning-50 border-warning-100 text-warning-500 dark:bg-warning-950/20 dark:border-warning-900/30"
                       )}
                     >

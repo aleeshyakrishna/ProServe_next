@@ -5,6 +5,7 @@ import { Sidebar } from "@/features/provider-dashboard/components/Sidebar";
 import { TopBar } from "@/features/provider-dashboard/components/TopBar";
 import { useDashboardStore } from "@/features/provider-dashboard/store/useDashboardStore";
 import { useAuthStore } from "@/features/auth/store/useAuthStore";
+import { useProviderDataStore } from "@/features/provider-dashboard/store/useProviderDataStore";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 
@@ -18,10 +19,17 @@ export default function ProviderDashboardLayout({
   const router = useRouter();
   const { isSidebarCollapsed } = useDashboardStore();
   const { user, fetchCurrentUser, isLoading, error } = useAuthStore();
+  const { fetchData } = useProviderDataStore();
 
   React.useEffect(() => {
     fetchCurrentUser();
   }, [fetchCurrentUser]);
+
+  React.useEffect(() => {
+    if (user?.id) {
+      fetchData(user.id);
+    }
+  }, [user, fetchData]);
 
   // Handle unauthenticated state or fetch failures
   React.useEffect(() => {
